@@ -31,5 +31,10 @@ class Database:
         my_con.close()
 
     @staticmethod
-    def update():
-        pass
+    def edit(name, lastname, nationalcode, dateofbirth):
+        my_con = connect('ListofEmployee.db')
+        my_cursor = my_con.cursor()
+        my_cursor.execute(f"UPDATE List_of_Employee SET Name='{name}' ,LastName='{lastname}', NationalCode='{nationalcode}',DateofBirth='{dateofbirth}', Pic='{str(nationalcode)+'.png'}' WHERE NationalCode='{nationalcode}'")
+        my_con.commit()
+        my_con.close()
+        return True

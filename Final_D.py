@@ -173,25 +173,26 @@ class SecondForm(QWidget, QThread):
             self.ui2.lbl6.setIcon(QIcon(my_pixmap))
             self.ui2.lbl6.clicked.connect(self.picture(image_frame, gray))
 
-            stylize = Filter.apply_stylize(image_frame)
+            cividis = Filter.cividis(image_frame)
             self.ui2.lbl7.setIconSize(QSize(100, 100))
-            my_pixmap = convertCvImage2QtImage(stylize)
+            my_pixmap = convertCvImage2QtImage(cividis)
             self.ui2.lbl7.setIcon(QIcon(my_pixmap))
-            self.ui2.lbl7.clicked.connect(self.picture(image_frame, stylize))
+            self.ui2.lbl7.clicked.connect(self.picture(image_frame, cividis))
 
-            stylize = Filter.apply_stylize(image_frame)
+            spring = Filter.spring(image_frame)
             self.ui2.lbl8.setIconSize(QSize(100, 100))
-            my_pixmap = convertCvImage2QtImage(stylize)
+            my_pixmap = convertCvImage2QtImage(spring)
             self.ui2.lbl8.setIcon(QIcon(my_pixmap))
-            self.ui2.lbl8.clicked.connect(self.picture(image_frame, stylize))
+            self.ui2.lbl8.clicked.connect(self.picture(image_frame, spring))
 
-            stylize = Filter.apply_stylize(image_frame)
+            summer = Filter.summer(image_frame)
             self.ui2.lbl9.setIconSize(QSize(100, 100))
-            my_pixmap = convertCvImage2QtImage(stylize)
+            my_pixmap = convertCvImage2QtImage(summer)
             self.ui2.lbl9.setIcon(QIcon(my_pixmap))
-            self.ui2.lbl9.clicked.connect(self.picture(image_frame, stylize))
+            self.ui2.lbl9.clicked.connect(self.picture(image_frame, summer))
 
             cv2.waitKey(1)
+        my_video.release()
 
     def picture(self, image, frame):
 
@@ -317,25 +318,27 @@ class ThirdForm(QWidget, QThread):
             self.ui3.lbl6.setIcon(QIcon(my_pixmap))
             self.ui3.lbl6.clicked.connect(self.picture(image_frame, gray))
 
-            stylize = Filter.apply_stylize(image_frame)
+            cividis = Filter.cividis(image_frame)
             self.ui3.lbl7.setIconSize(QSize(100, 100))
-            my_pixmap = convertCvImage2QtImage(stylize)
+            my_pixmap = convertCvImage2QtImage(cividis)
             self.ui3.lbl7.setIcon(QIcon(my_pixmap))
-            self.ui3.lbl7.clicked.connect(self.picture(image_frame, stylize))
+            self.ui3.lbl7.clicked.connect(self.picture(image_frame, cividis))
 
-            stylize = Filter.apply_stylize(image_frame)
+            spring = Filter.spring(image_frame)
             self.ui3.lbl8.setIconSize(QSize(100, 100))
-            my_pixmap = convertCvImage2QtImage(stylize)
+            my_pixmap = convertCvImage2QtImage(spring)
             self.ui3.lbl8.setIcon(QIcon(my_pixmap))
-            self.ui3.lbl8.clicked.connect(self.picture(image_frame, stylize))
+            self.ui3.lbl8.clicked.connect(self.picture(image_frame, spring))
 
-            stylize = Filter.apply_stylize(image_frame)
+            summer = Filter.summer(image_frame)
             self.ui3.lbl9.setIconSize(QSize(100, 100))
-            my_pixmap = convertCvImage2QtImage(stylize)
+            my_pixmap = convertCvImage2QtImage(summer)
             self.ui3.lbl9.setIcon(QIcon(my_pixmap))
-            self.ui3.lbl9.clicked.connect(self.picture(image_frame, stylize))
+            self.ui3.lbl9.clicked.connect(self.picture(image_frame, summer))
 
             cv2.waitKey(1)
+        my_video.release()
+
 
 
 app = QApplication(sys.argv)

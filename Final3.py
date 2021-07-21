@@ -2,22 +2,13 @@ import sys
 import keyboard  # using module keyboard
 import numpy as np
 from PySide6.QtWidgets import *
-from PySide6.QtWidgets import QLabel
-from PyQt5 import QtGui
-
-
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtGui import QImage, QIcon
+from PySide6.QtGui import QImage, QIcon, QPixmap, QImage
 from PySide6.QtCore import *
 from sqlite3 import connect
-from PySide6.QtCore import QThread, QTime
+import cv2
 from functools import partial
 import numpy as np
-
-from PySide6.QtGui import QPixmap, QImage
-import cv2
-from PIL.ImageQt import ImageQt
-from PIL import Image
 
 face_detector = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
@@ -42,6 +33,11 @@ def apply_sepia(frame, intensity=0.5):
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
     frame_h, frame_w, frame_d = frame.shape
     frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+    return frame
+
+
+def gray_scale(frame, intensity=0.5):
+    frame = cv2.cvtColor(frame, cv2.IMREAD_GRAYSCALE)
     return frame
 
 
@@ -105,18 +101,12 @@ class FirstForm(QMainWindow):
         indices = self.ui.tableWidget.selectionModel().selectedRows()
 
         for index in sorted(indices):
-            my_con = connect('ListofEmployee.db')
-            my_cursor = my_con.cursor()
-            my_cursor.execute(f"DELETE FROM List_of_Employee WHERE NationalCode = '{self.ui.tableWidget.item(index.row(), 2).text()}'")
-            my_con.commit()
-            my_con.close()
+            Database.delete(self.ui.tableWidget.item(index.row(), 2).text())
             self.ui.tableWidget.removeRow(index.row())
 
     def readList(self):
 
-        my_con = connect('ListofEmployee.db')
-        my_cursor = my_con.cursor()
-        result = my_cursor.execute("SELECT * FROM List_of_Employee")
+        result = Database.select()
 
         for row, data in enumerate(result):
             self.ui.tableWidget.insertRow(row)
@@ -175,11 +165,7 @@ class SecondForm(QWidget, QThread):
         nationalcode = self.ui2.tb_nationalcode.text()
         dateofbirth = self.ui2.tb_dateofbirth.text()
         cv2.imwrite(f"{nationalcode}.png", self.frame_face)
-        my_con = connect("ListofEmployee.db")
-        my_cursor = my_con.cursor()
-        my_cursor.execute(f"INSERT INTO List_of_Employee(Name, LastName, NationalCode, DateofBirth, Pic) VALUES('{name}', '{lastname}', '{nationalcode}', '{dateofbirth}', '{str(nationalcode)+'.png'}')")
-        my_con.commit()
-        my_con.close()
+        Database.insert(name, lastname, nationalcode, dateofbirth)
         mytuple = (name, lastname, nationalcode, dateofbirth)
         row = window.ui.tableWidget.rowCount()
         window.ui.tableWidget.insertRow(row)
@@ -254,9 +240,9 @@ class SecondForm(QWidget, QThread):
             self.ui2.lbl5.setIcon(QIcon(my_pixmap))
             self.ui2.lbl5.clicked.connect(self.add)
 
-            stylize = apply_stylize(image_frame)
+            gray = gray_scale(image_frame)
             self.ui2.lbl6.setIconSize(QSize(100, 100))
-            my_pixmap = convertCvImage2QtImage(stylize)
+            my_pixmap = convertCvImage2QtImage(gray)
             self.ui2.lbl6.setIcon(QIcon(my_pixmap))
             self.ui2.lbl6.clicked.connect(self.add)
 
@@ -282,7 +268,7 @@ class SecondForm(QWidget, QThread):
             self.ui2.lbl9.clicked.connect(self.add)
 
 
-            cv2.waitKey(10)
+            cv2.waitKey(1)
             #self.showOutput(image)
 
     def takepicture(self):
